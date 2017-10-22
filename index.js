@@ -65,8 +65,8 @@ var quiz = [
   {
     "question": 'Sansa Stark is the Lady of _________',
     "choices": ['the Night',
-                'Winterfell',
                 'Shanghai',
+                'Winterfell',
                 'Casterly Rock'],
     "correct": 'Winterfell',
     "explanation": "Through many trials and tribulation Sansa Stark returns to her ancestral castle to becoming the Lady of Winterfell",
@@ -74,8 +74,8 @@ var quiz = [
   {
     "question": 'Who is now the Three Eyed Raven?',
     "choices": ['The Two Eyed Raven',
-                'Bran Stark',
                 'Mira Reed',
+                'Bran Stark',
                 'Bilbo Baggin'],
     "correct": 'Bran Stark',
     "explanation": "Bran Stark becomes the mystical figure the Three Eyed Raven, a power figure who can see and experience all events in the past and present",
@@ -151,7 +151,7 @@ var quiz = [
      function setupButtons() {
          $('.choice').on('mouseover', function () {
              $(this).css({
-                 'background-color': '#e1e1e1'
+                 'background-color': '#f1db73'
              });
          });
          $('.choice').on('mouseout', function () {
@@ -213,16 +213,16 @@ var quiz = [
          }).insertAfter('#explanation');
 
          if(result < 33){
-            $("#imgId").attr("src","https://github.com/kaicyee/js_quiz_exercise/blob/master/assets/gifs/fire_breathing_dragon05.gif?raw=true");
+            $("#imgId").attr("src","./assets/fire_breathing_dragon05.gif");
          }
          else if(result < 50){
-            $("#imgId").attr("src","https://github.com/kaicyee/js_quiz_exercise/blob/master/assets/gifs/fire_breathing_dragon05.gif?raw=true");
+            $("#imgId").attr("src","./assets/fire_breathing_dragon05.gif");
          }
           else if(result < 100){
-            $("#imgId").attr("src","https://github.com/kaicyee/js_quiz_exercise/blob/master/assets/gifs/dancing-tyrion.gif?raw=true");
+            $("#imgId").attr("src","./assets/dancing-tyrion.gif");
          }
          else if(result == 100){
-            $("#imgId").attr("src","https://github.com/kaicyee/js_quiz_exercise/blob/master/assets/gifs/dancing-tyrion.gif?raw=true");
+            $("#imgId").attr("src","./assets/dancing-tyrion.gif");
          }
      }
 
