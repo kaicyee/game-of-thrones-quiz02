@@ -1,3 +1,4 @@
+
 var quiz = [
   {
     "question": 'Who is Ned Stark\'s bastard son?',
@@ -69,7 +70,7 @@ var quiz = [
                 'Winterfell',
                 'Casterly Rock'],
     "correct": 'Winterfell',
-    "explanation": "Through many trials and tribulation Sansa Stark returns to her ancestral castle to becoming the Lady of Winterfell",
+    "explanation": "Through many trials and tribulation Sansa Stark returns to her ancestral castle to become the Lady of Winterfell",
     },
   {
     "question": 'Who is now the Three Eyed Raven?',
@@ -92,172 +93,162 @@ var quiz = [
     ];
 
 
- var currentquestion = 0,
+let currentquestion = 0,
      score = 0,
      submt = true,
      picked;
 
      $(document).ready(function(){
        $("#submitbutton").hide();
+       
+// sets up response for quiz       
+function htmlEncode(value) {
+  return $(document.createElement('div')).text(value).html();
+  }
 
-     function htmlEncode(value) {
-         return $(document.createElement('div')).text(value).html();
-     }
+// counter for user response
+function addChoices(choices) {
+  if (typeof choices !== "undefined" && $.type(choices) == "array") {
+    $('#choice-block').empty();
+    for (var i = 0; i < choices.length; i++) {
+      $(document.createElement('li')).addClass('choice choice-box').attr('data-index', i).text(choices[i]).appendTo('#choice-block');
+      }
+    }
+  }
 
-     function addChoices(choices) {
-         if (typeof choices !== "undefined" && $.type(choices) == "array") {
-             $('#choice-block').empty();
-             for (var i = 0; i < choices.length; i++) {
-                 $(document.createElement('li')).addClass('choice choice-box').attr('data-index', i).text(choices[i]).appendTo('#choice-block');
-             }
-         }
-     }
+// evaluates response, adds counter for advancing to next question
+function nextQuestion() {
+  submt = true;
+    $('#explanation').empty();
+    $('#question').text(quiz[currentquestion]['question']);
+    $('#pager').text('Question ' + Number(currentquestion + 1) + ' of ' + quiz.length);
+      if (quiz[currentquestion].hasOwnProperty('image') && quiz[currentquestion]['image'] != "") {
+      if ($('#question-image').length == 0) {
+        $(document.createElement('img')).addClass('question-image').attr('id', 'question-image').attr('src', quiz[currentquestion]['image']).attr('alt', htmlEncode(quiz[currentquestion]['question'])).insertAfter('#question');
+      } else {
+        $('#question-image').attr('src', quiz[currentquestion]['image']).attr('alt', htmlEncode(quiz[currentquestion]['question']));
+        }
+        } else {
+          $('#question-image').remove();
+            }
+          addChoices(quiz[currentquestion]['choices']);
+          setupButtons();
+        }
 
-     function nextQuestion() {
-         submt = true;
-         //alert("nQ");
-         $('#explanation').empty();
-         $('#question').text(quiz[currentquestion]['question']);
-         $('#pager').text('Question ' + Number(currentquestion + 1) + ' of ' + quiz.length);
-         if (quiz[currentquestion].hasOwnProperty('image') && quiz[currentquestion]['image'] != "") {
-             if ($('#question-image').length == 0) {
-                 $(document.createElement('img')).addClass('question-image').attr('id', 'question-image').attr('src', quiz[currentquestion]['image']).attr('alt', htmlEncode(quiz[currentquestion]['question'])).insertAfter('#question');
-             } else {
-                 $('#question-image').attr('src', quiz[currentquestion]['image']).attr('alt', htmlEncode(quiz[currentquestion]['question']));
-             }
-         } else {
-             $('#question-image').remove();
-         }
-         addChoices(quiz[currentquestion]['choices']);
-         setupButtons();
-     }
+// evaluates which question the user is on
+function processQuestion() {
+  currentquestion++;
+    $("#submitbutton").hide();
+      if (currentquestion == quiz.length) {
+      endQuiz();
+        } else {
+          nextQuestion();
+        }
+      }
 
-     function processQuestion() {
-
-         //alert(choice);
-         currentquestion++;
-          //alert(currentquestion);
-         $("#submitbutton").hide();
-
-             if (currentquestion == quiz.length) {
-                 endQuiz();
-             } else {
-
-                 nextQuestion();
-             }
-     }
-
-
-     function setupButtons() {
-         $('.choice').on('mouseover', function () {
-             $(this).css({
-                 'background-color': '#f1db73'
-             });
+// set up button states
+function setupButtons() {
+  $('.choice').on('mouseover', function () {
+    $(this).css({
+      'background-color': '#f1db73'
+        });
+      });
+    $('.choice').on('mouseout', function () {
+      $(this).css({
+      'background-color': '#fff'
          });
-         $('.choice').on('mouseout', function () {
-             $(this).css({
-                 'background-color': '#fff'
-             });
-         })
-         $('.choice').on('click', function () {
-             //alert("");
-             choice = $(this).attr('data-index');
-             $('.choice').removeAttr('style').off('mouseout mouseover');
-             $(this).css({
-                 'border-color': '#222',
-                 'font-weight': 500,
-                 'background-color': '#f4e497'
-             });
-             if (quiz[currentquestion]['choices'][choice] == quiz[currentquestion]['correct']) {
-             $('.choice').eq(choice).css({
-                 'background-color': '#b3d7af'
-             });
-             $('#explanation').html('<strong>Correct!</strong> ' + htmlEncode(quiz[currentquestion]['explanation']));
+       })
+    $('.choice').on('click', function () {
+      choice = $(this).attr('data-index');
+      $('.choice').removeAttr('style').off('mouseout mouseover');
+      $(this).css({
+        'border-color': '#222',
+        'font-weight': 500,
+        'background-color': '#f4e497'
+        });
+        if (quiz[currentquestion]['choices'][choice] == quiz[currentquestion]['correct']) {
+          $('.choice').eq(choice).css({
+            'background-color': '#b3d7af'
+        });
+    $('#explanation').html('<strong>Correct!</strong> ' + htmlEncode(quiz[currentquestion]['explanation']));
              score++;
-         } else {
-             $('.choice').eq(choice).css({
-                 'background-color': '#d63432'
-             });
-             $('#explanation').html('<strong>Incorrect.</strong> ' + htmlEncode(quiz[currentquestion]['explanation']));
-         }
+      } else {
+        $('.choice').eq(choice).css({
+          'background-color': '#d63432'
+        });
+        $('#explanation').html('<strong>Incorrect.</strong> ' + htmlEncode(quiz[currentquestion]['explanation']));
+        }
 
-             if (submt) {
-                 //alert("submit");
-                 submt = false;
+        if (submt) {
+          submt = false;
 
-                setTimeout(processQuestion,3000);
+        setTimeout(processQuestion,5000); // time delay for next answer
 
-             }
-         })
-     }
+        }
+      })
+    }
 
+// function to calculate final score
+function endQuiz() {
+  $('#explanation').empty();
+  $('#question').empty();
+  $('#choice-block').empty();
+  $('#submitbutton').remove();
+  $('#question').text("You got " + score + " out of " + quiz.length + " correct.");
+  $(document.createElement('h2')).css({
+    'text-align': 'center',
+    'font-size': '4em'
+    }).text(Math.round(score / quiz.length * 100) + '%').insertAfter('#question');
 
-     function endQuiz() {
-         $('#explanation').empty();
-         $('#question').empty();
-         $('#choice-block').empty();
-         $('#submitbutton').remove();
-         $('#question').text("You got " + score + " out of " + quiz.length + " correct.");
-         $(document.createElement('h2')).css({
-             'text-align': 'center',
-             'font-size': '4em'
-         }).text(Math.round(score / quiz.length * 100) + '%').insertAfter('#question');
+  var result = Math.round(score / quiz.length * 100);
+  var graphic = document.createElement('img');
+    graphic.id = 'imgId';
+    $(graphic).css({
+      'height':'100%',
+      'width': '100%',
+      'margin':'auto'
+      }).insertAfter('#explanation');
 
-         var result = Math.round(score / quiz.length * 100);
-         var g = document.createElement('img');
-          g.id = 'imgId';
-          $(g).css({
-             'height':'100%',
-             'width': '100%',
-             'margin':'auto'
-         }).insertAfter('#explanation');
+  if(result < 33){
+    $("#imgId").attr("src","./assets/fire_breathing_dragon05.gif");
+    }
+    else if(result < 50){
+      $("#imgId").attr("src","./assets/fire_breathing_dragon05.gif");
+      }
+    else if(result < 100){
+      $("#imgId").attr("src","./assets/dancing-tyrion.gif");
+      }
+    else if(result == 100){
+      $("#imgId").attr("src","./assets/dancing-tyrion.gif");
+      }
+    }
 
-         if(result < 33){
-            $("#imgId").attr("src","./assets/fire_breathing_dragon05.gif");
-         }
-         else if(result < 50){
-            $("#imgId").attr("src","./assets/fire_breathing_dragon05.gif");
-         }
-          else if(result < 100){
-            $("#imgId").attr("src","./assets/dancing-tyrion.gif");
-         }
-         else if(result == 100){
-            $("#imgId").attr("src","./assets/dancing-tyrion.gif");
-         }
-     }
+// initialize quiz
+function init() {
+  if (typeof quiztitle !== "undefined" && $.type(quiztitle) === "string") {
+    $(document.createElement('h1')).text(quiztitle).appendTo('#frame');
+      }
 
+//add pager and questions
+  if (typeof quiz !== "undefined" && $.type(quiz) === "array") {
+//add pager
+    $(document.createElement('p')).addClass('pager').attr('id', 'pager').text('Question 1 of ' + quiz.length).appendTo('#frame');
+//add first question
+    $(document.createElement('h2')).addClass('question').attr('id', 'question').text(quiz[0]['question']).appendTo('#frame');
+//add image if present
+    if (quiz[0].hasOwnProperty('image') && quiz[0]['image'] !== "") {
+      $(document.createElement('img')).addClass('question-image').attr('id', 'question-image').attr('src', quiz[0]['image']).attr('alt', htmlEncode(quiz[0]['question'])).appendTo('#frame');
+    }
+//questions holder
+    $(document.createElement('ul')).attr('id', 'choice-block').appendTo('#frame');
+//add choices
+    addChoices(quiz[0]['choices']);
+    $(document.createElement('p')).addClass('explanation').attr('id', 'explanation').html('&nbsp;').appendTo('#frame');
 
-     function init() {
-         //add title
-         if (typeof quiztitle !== "undefined" && $.type(quiztitle) === "string") {
-             $(document.createElement('h1')).text(quiztitle).appendTo('#frame');
-        // } else {
-        //     $(document.createElement('h1')).text("Quiz").appendTo('#frame');
-         }
+    setupButtons();
 
-         //add pager and questions
-         if (typeof quiz !== "undefined" && $.type(quiz) === "array") {
-             //add pager
-             $(document.createElement('p')).addClass('pager').attr('id', 'pager').text('Question 1 of ' + quiz.length).appendTo('#frame');
-             //add first question
-             $(document.createElement('h2')).addClass('question').attr('id', 'question').text(quiz[0]['question']).appendTo('#frame');
-             //add image if present
-             if (quiz[0].hasOwnProperty('image') && quiz[0]['image'] !== "") {
-                 $(document.createElement('img')).addClass('question-image').attr('id', 'question-image').attr('src', quiz[0]['image']).attr('alt', htmlEncode(quiz[0]['question'])).appendTo('#frame');
-             }
-
-             //questions holder
-             $(document.createElement('ul')).attr('id', 'choice-block').appendTo('#frame');
-
-             //add choices
-             addChoices(quiz[0]['choices']);
-
-              $(document.createElement('p')).addClass('explanation').attr('id', 'explanation').html('&nbsp;').appendTo('#frame');
-
-             setupButtons();
-
-         }
-     }
+      }
+    }
 
      init();
  });    
