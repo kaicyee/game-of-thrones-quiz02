@@ -98,8 +98,10 @@ let currentquestion = 0,
      submt = true,
      picked;
 
-     $(document).ready(function(){
-       $("#submitbutton").hide();
+// jQuery command to test to see if DOM is ready
+$(document).ready(function(){
+  // unimplemented submit button
+  // $("#submitbutton").hide();
        
 // sets up response for quiz       
 function htmlEncode(value) {
