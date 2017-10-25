@@ -1,5 +1,5 @@
 
-var quiz = [
+let quiz = [
   {
     "question": 'Who is Ned Stark\'s bastard son?',
     "choices": ['John Rivers',
@@ -112,7 +112,7 @@ function htmlEncode(value) {
 function addChoices(choices) {
   if (typeof choices !== "undefined" && $.type(choices) == "array") {
     $('#choice-block').empty();
-    for (var i = 0; i < choices.length; i++) {
+    for (let i = 0; i < choices.length; i++) {
       $(document.createElement('li')).addClass('choice choice-box').attr('data-index', i).text(choices[i]).appendTo('#choice-block');
       }
     }
@@ -202,8 +202,8 @@ function endQuiz() {
     'font-size': '4em'
     }).text(Math.round(score / quiz.length * 100) + '%').insertAfter('#question');
 
-  var result = Math.round(score / quiz.length * 100);
-  var graphic = document.createElement('img');
+  let result = Math.round(score / quiz.length * 100);
+  let graphic = document.createElement('img');
     graphic.id = 'imgId';
     $(graphic).css({
       'height':'100%',
